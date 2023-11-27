@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To Do List</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <article class="main">
+      <section class="container">
+        <article class="d-flex justify-content-between align-items-end  flex-wrap gap-2">
+          <div class="weather rounded-3 mb-3 pb-2 pt-1 px-3 shadow-sm" id="weather">
+          </div>
+          <h1 class="time"></h1>
+        </article>
+        <article class="to-do-list px-3 py-4">
+          <div class="header">
+            <div
+              class="d-flex justify-content-between align-items-center flex-wrap gap-2"
+            >
+              <h5 class="title">To Do List</h5>
+              <div class="text-end"><span class="date"></span><br /></div>
+            </div>
+          </div>
+          <div class="hr"></div>
+          <div class="body">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+              <div class="filter">
+                <span class="all active">All</span>
+                <span class="pending mx-2">Pending</span>
+                <span class="complete">Complete</span>
+              </div>
+              <button class="btn clc-btn py-0" id="clear">Clear All</button>
+            </div>
+            <ol class="list-unstyled mt-4" id="list">
+            </ol>
+          </div>
+        </article>
+        <article class="add-new mt-4">
+          <label for="add_new" class="fw-bold">Add Your work to Do</label>
+          <div class="d-flex align-items-center">
+            <div class="col-10">
+              <input
+                type="search"
+                class="w-100 px-2 py-1"
+                id="add_new"
+                placeholder="add a new task . . ."
+              />
+            </div>
+            <div class="col-2 text-end">
+              <button type="button" class="btn btn-primary py-1" id="add_new_btn">add</button>
+            </div>
+          </div>
+        </article>
+      </section>
+    </article>
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+  <script src="./app.js"></script>
+</html>
