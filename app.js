@@ -18,10 +18,10 @@ setInterval(() => {
     if (d.getHours() >= 10) {
       hr = d.getHours();
     } else {
-      if(d.getHours() == 0){
+      if (d.getHours() == 0) {
         let t = 12;
-        hr =  t;
-      }else{
+        hr = t;
+      } else {
         let t = d.getHours();
         hr = "0" + t;
       }
@@ -71,7 +71,7 @@ setInterval(() => {
   date.innerHTML = `<span class='me-2'>${day},</span> ${month} ${day_no}, ${year}`;
 }, 1000);
 
-// weather 
+// weather
 const findCurrentLocation = () => {
   let success = (position) => {
     let latitude = position.coords.latitude;
@@ -82,7 +82,7 @@ const findCurrentLocation = () => {
 
       let response = await fetch(apiUrl);
       let data = await response.json();
-      document.querySelector('#weather').innerHTML = `
+      document.querySelector("#weather").innerHTML = `
       <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
         <h4 class="m-0">${data.main.temp} &#176</h3>
         <div class="text-end">
@@ -91,7 +91,7 @@ const findCurrentLocation = () => {
         </div>
         <h5 class="col-12">${data.name}</h5>
       </div>      
-      `
+      `;
     };
     currentWeather();
   };
@@ -104,49 +104,73 @@ const findCurrentLocation = () => {
 
 window.addEventListener("load", findCurrentLocation);
 
-
-// to do list 
-let userInput = document.querySelector('#add_new');
-let addBtn = document.querySelector('#add_new_btn');
-let toDoLists = document.querySelector('#list');
-let lists = JSON.parse(localStorage.getItem('to-do-list'));
-if(!lists){lists = [];};
+// to do list
+let userInput = document.querySelector("#add_new");
+let addBtn = document.querySelector("#add_new_btn");
+let toDoLists = document.querySelector("#list");
+let lists = JSON.parse(localStorage.getItem("to-do-list"));
+if (!lists) {
+  lists = [];
+}
 let data;
 let edited = false;
 let editedId;
 
-addBtn.addEventListener('click',()=>{
-  let inputValue = userInput.value.trim()
-  if(inputValue){
-    if(edited){
+addBtn.addEventListener("click", () => {
+  let inputValue = userInput.value.trim();
+  if (inputValue) {
+    if (edited) {
       lists[editedId].Task = inputValue;
-      edited = false
-    }else{
-      data ={
-        Task : userInput.value,
-        Status : "pending"
-      }
+      edited = false;
+    } else {
+      data = {
+        Task: userInput.value,
+        Status: "pending",
+      };
       lists.push(data);
     }
-    localStorage.setItem('to-do-list',JSON.stringify(lists));
-    userInput.value = '';
-  }else{
-    alert('ajfofd')
+    localStorage.setItem("to-do-list", JSON.stringify(lists));
+    userInput.value = "";
+  } else {
+    alert("ajfofd");
   }
-  addUi(filterId='all');
-  document.querySelector('.filter span.active').classList.remove('active');
-  document.querySelector('.filter span#all').classList.add('active');
+  addUi((filterId = "all"));
+  document.querySelector(".filter span.active").classList.remove("active");
+  document.querySelector(".filter span#all").classList.add("active");
 });
 
-// UI 
-function addUi (filterId) {
-  toDoLists.innerHTML = '';
-  lists.forEach((task,id) => {
+userInput.addEventListener("keyup", (e) => {
+  if (e.key == "Enter") {
+    let inputValue = userInput.value.trim();
+    if (inputValue) {
+      if (edited) {
+        lists[editedId].Task = inputValue;
+        edited = false;
+      } else {
+        data = {
+          Task: userInput.value,
+          Status: "pending",
+        };
+        lists.push(data);
+      }
+      localStorage.setItem("to-do-list", JSON.stringify(lists));
+      userInput.value = "";
+    } else {
+      alert("ajfofd");
+    }
+    addUi((filterId = "all"));
+    document.querySelector(".filter span.active").classList.remove("active");
+    document.querySelector(".filter span#all").classList.add("active");
+  }
+});
+// UI
+function addUi(filterId) {
+  toDoLists.innerHTML = "";
+  lists.forEach((task, id) => {
+    let taskComplete = task.Status == "complete" ? "active" : "";
+    let check = task.Status == "complete" ? "checked" : "";
 
-    let taskComplete = task.Status == 'complete' ? 'active' : '';
-    let check = task.Status == 'complete' ? 'checked' : '';
-
-    if(filterId == task.Status || filterId == 'all'){
+    if (filterId == task.Status || filterId == "all") {
       toDoLists.innerHTML += `
       <li class="mt-3">
       <div class="d-flex justify-content-between align-items-start">
@@ -175,53 +199,55 @@ function addUi (filterId) {
       `;
     }
   });
-  if(toDoLists.innerHTML == ''){toDoLists.innerHTML = `<h4 class='text-danger'>there is nothing to do.</h4>`;}
-}
-addUi(filterId='all');
-
-// filter 
-let filterSpan = document.querySelectorAll('.filter span');
-filterSpan.forEach((span,i)=>{
-  span.addEventListener('click',()=>{
-    document.querySelector('.filter span.active').classList.remove('active');
-    span.classList.add('active')
-    addUi(span.id)
-  })
-})
-
-// status 
-function statusUpdate (x)  {
-  let text = document.querySelectorAll('.list-item');
-  if(x.checked){
-    lists[x.id].Status = 'complete'
-  }else{
-    lists[x.id].Status = 'pending'
+  if (toDoLists.innerHTML == "") {
+    toDoLists.innerHTML = `<h4 class='text-danger'>there is nothing to do.</h4>`;
   }
-  localStorage.setItem('to-do-list',JSON.stringify(lists));
+}
+addUi((filterId = "all"));
+
+// filter
+let filterSpan = document.querySelectorAll(".filter span");
+filterSpan.forEach((span, i) => {
+  span.addEventListener("click", () => {
+    document.querySelector(".filter span.active").classList.remove("active");
+    span.classList.add("active");
+    addUi(span.id);
+  });
+});
+
+// status
+function statusUpdate(x) {
+  let text = document.querySelectorAll(".list-item");
+  if (x.checked) {
+    lists[x.id].Status = "complete";
+  } else {
+    lists[x.id].Status = "pending";
+  }
+  localStorage.setItem("to-do-list", JSON.stringify(lists));
 }
 
-// delete 
-function deleteTask (y) {
-  lists.splice(y,1);
-  localStorage.setItem('to-do-list',JSON.stringify(lists));
+// delete
+function deleteTask(y) {
+  lists.splice(y, 1);
+  localStorage.setItem("to-do-list", JSON.stringify(lists));
   addUi(filterId);
-  document.querySelector('.filter span.active').classList.remove('active');
-  document.querySelector('.filter span#all').classList.add('active');
+  document.querySelector(".filter span.active").classList.remove("active");
+  document.querySelector(".filter span#all").classList.add("active");
 }
 
-// editTask 
-function editTask(x){
+// editTask
+function editTask(x) {
   edited = true;
-  userInput.value = lists[x].Task
+  userInput.value = lists[x].Task;
   userInput.focus();
   editedId = x;
 }
 
-// clear 
- document.querySelector('#clear').addEventListener('click',()=>{
-  lists.splice(0,lists.length)
-  console.log(lists)
-  localStorage.setItem('to-do-list',JSON.stringify(lists));
+// clear
+document.querySelector("#clear").addEventListener("click", () => {
+  lists.splice(0, lists.length);
+  console.log(lists);
+  localStorage.setItem("to-do-list", JSON.stringify(lists));
   addUi();
- })
+});
 // localStorage.clear();
