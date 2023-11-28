@@ -18,8 +18,13 @@ setInterval(() => {
     if (d.getHours() >= 10) {
       hr = d.getHours();
     } else {
-      let t = d.getHours();
-      hr = "0" + t;
+      if(d.getHours() == 0){
+        let t = 12;
+        hr =  t;
+      }else{
+        let t = d.getHours();
+        hr = "0" + t;
+      }
     }
   }
 
@@ -107,78 +112,109 @@ let toDoLists = document.querySelector('#list');
 let lists = JSON.parse(localStorage.getItem('to-do-list'));
 if(!lists){lists = [];};
 let data;
+let edited = false;
+let editedId;
 
 addBtn.addEventListener('click',()=>{
   let inputValue = userInput.value.trim()
   if(inputValue){
-    data ={
-      Task : userInput.value,
-      Status : "pending"
+    if(edited){
+      lists[editedId].Task = inputValue;
+      edited = false
+    }else{
+      data ={
+        Task : userInput.value,
+        Status : "pending"
+      }
+      lists.push(data);
     }
-    lists.push(data);
     localStorage.setItem('to-do-list',JSON.stringify(lists));
     userInput.value = '';
   }else{
     alert('ajfofd')
   }
-  addUi();
+  addUi(filterId='all');
+  document.querySelector('.filter span.active').classList.remove('active');
+  document.querySelector('.filter span#all').classList.add('active');
 });
 
 // UI 
-function addUi () {
+function addUi (filterId) {
   toDoLists.innerHTML = '';
   lists.forEach((task,id) => {
-    let taskComplete = lists[id].Status == 'complete' ? 'active' : '';
-    let check = lists[id].Status == 'complete' ? 'checked' : '';
-    toDoLists.innerHTML += `
-    <li class="mt-2">
-    <div class="d-flex justify-content-between align-items-start">
-      <div class="left col-10">
-        <label for="${id}" class="d-flex justify-content-start align-items-center">
-          <div class="col-1 text-end pe-3">
-            <input type="checkbox" class='m-0 p-0' id="${id}" onclick='statusUpdate(this)' ${check}/>
-          </div>
-          <div class="col-11">
-            <h6 class="list-item m-0 p-0 ${taskComplete}">${task.Task}</h6>
-          </div>
-        </label>
+
+    let taskComplete = task.Status == 'complete' ? 'active' : '';
+    let check = task.Status == 'complete' ? 'checked' : '';
+
+    if(filterId == task.Status || filterId == 'all'){
+      toDoLists.innerHTML += `
+      <li class="mt-3">
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="left col-10">
+          <label for="${id}" class="d-flex justify-content-start align-items-center">
+              <input type="checkbox" class='checkbox col-1 text-end me-3 m-0 p-0' id="${id}" onclick='statusUpdate(this)' ${check}/>
+            <div class="col-11">
+              <h6 class="list-item m-0 p-0 active">${task.Task}</h6>
+            </div>
+          </label>
+        </div>
+        <div class="right text-end col-2">
+          <i
+            class="fa-solid fa-pen-to-square me-2"
+            style="color: #3366ff"
+            onclick='editTask(${id})'
+          ></i>
+          <i
+            class="fa-solid fa-trash"
+            style="color: rgb(255, 51, 51)"
+            onclick='deleteTask(${id})'
+          ></i>
+        </div>
       </div>
-      <div class="right text-end col-2">
-        <i
-          class="fa-solid fa-pen-to-square me-2"
-          style="color: #3366ff"
-        ></i>
-        <i
-          class="fa-solid fa-trash"
-          style="color: rgb(255, 51, 51)"
-          onclick='deleteTask(${id})'
-        ></i>
-      </div>
-    </div>
-  </li>
-    `;
+    </li>
+      `;
+    }
   });
   if(toDoLists.innerHTML == ''){toDoLists.innerHTML = `<h4 class='text-danger'>there is nothing to do.</h4>`;}
 }
+addUi(filterId='all');
+
+// filter 
+let filterSpan = document.querySelectorAll('.filter span');
+filterSpan.forEach((span,i)=>{
+  span.addEventListener('click',()=>{
+    document.querySelector('.filter span.active').classList.remove('active');
+    span.classList.add('active')
+    addUi(span.id)
+  })
+})
 
 // status 
 function statusUpdate (x)  {
   let text = document.querySelectorAll('.list-item');
   if(x.checked){
-    text[x.id].classList.add('active')
     lists[x.id].Status = 'complete'
   }else{
-    text[x.id].classList.remove('active')
     lists[x.id].Status = 'pending'
   }
   localStorage.setItem('to-do-list',JSON.stringify(lists));
 }
 
-// delte 
+// delete 
 function deleteTask (y) {
   lists.splice(y,1);
   localStorage.setItem('to-do-list',JSON.stringify(lists));
-  addUi();
+  addUi(filterId);
+  document.querySelector('.filter span.active').classList.remove('active');
+  document.querySelector('.filter span#all').classList.add('active');
+}
+
+// editTask 
+function editTask(x){
+  edited = true;
+  userInput.value = lists[x].Task
+  userInput.focus();
+  editedId = x;
 }
 
 // clear 
@@ -188,5 +224,4 @@ function deleteTask (y) {
   localStorage.setItem('to-do-list',JSON.stringify(lists));
   addUi();
  })
-addUi();
 // localStorage.clear();

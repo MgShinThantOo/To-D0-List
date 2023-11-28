@@ -38,7 +38,8 @@ h6{
     font-size: 18px !important;
     color: #4d4d4d !important;
 }
-label h6.active{
+
+.checkbox:checked~div>h6.active{
     text-decoration: line-through;
     text-decoration-color: #3366ff;
     text-decoration-thickness: 2px;
